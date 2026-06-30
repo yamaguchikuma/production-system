@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==============================
+// 顧客マスタ
+// ==============================
+model Customer {
+  id          String   @id @default(uuid())
+  name        String
+  contactName String?
+  phone       String?
+  email       String?
+  address     String?
+  isExcelSync Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders Order[]
+}
+
+// ==============================
+// 受注ヘッダー
+// ==============================
+model Order {
+  id           String      @id @default(uuid())
+  orderNumber  String      @unique
+  customerId   String
+  dueDate      DateTime
+  status       OrderStatus @default(PENDING)
+  source       String?
+  excelOrderId String?
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  orderItems OrderItem[]
+}
+
+enum OrderStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  SHIPPED
+  ON_HOLD
+}
+
+// ==============================
+// 受注明細
+// ==============================
+model OrderItem {
+  id               String           @id @default(uuid())
+  orderId          String
+  productFamilyId  String
+  productCode      String?
+  quantity         Int
+  thickness        Float?
+  width            Float?
+  height           Float?
+  hasBend          Boolean          @default(false)
+  bendAngle        Float?
+  processingMethod ProcessingMethod @default(PRESS)
+  unitPrice        Float?
+  status           OrderItemStatus  @default(PENDING)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  order         Order         @relation(fields: [orderId], references: [id])
+  productFamily ProductFamily @relation(fields: [productFamilyId], references: [id])
+  workOrders    WorkOrder[]
+}
+
+enum OrderItemStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ProcessingMethod {
+  PRESS
+  LASER
+}
+
+// ==============================
+// 製品ファミリーマスタ
+// ==============================
+model ProductFamily {
+  id               String   @id @default(uuid())
+  name             String
+  description      String?
+  processRoutes    Json
+  altProcessRoutes Json?
+  hasBothMethods   Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  orderItems OrderItem[]
+}
+
+// ==============================
+// 工程マスタ
+// ==============================
+model Process {
+  id              String   @id @default(uuid())
+  name            String
+  machineType     String
+  stdMinPerPc     Float    @default(0)
+  defaultSetupMin Float    @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  workOrders     WorkOrder[]
+  employeeSkills EmployeeSkill[]
+}
+
+// ==============================
+// 機械マスタ
+// ==============================
+model Machine {
+  id             String   @id @default(uuid())
+  name           String
+  machineType    String
+  count          Int      @default(1)
+  workStartTime  String   @default("08:00")
+  workEndTime    String   @default("17:00")
+  lunchStartTime String   @default("12:00")
+  lunchEndTime   String   @default("13:00")
+  isActive       Boolean  @default(true)
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workOrders WorkOrder[]
+}
+
+// ==============================
+// 社員マスタ
+// ==============================
+model Employee {
+  id            String   @id @default(uuid())
+  name          String
+  workStartTime String   @default("08:00")
+  workEndTime   String   @default("17:00")
+  shiftPattern  String   @default("weekday")
+  isActive      Boolean  @default(true)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workOrders     WorkOrder[]
+  employeeSkills EmployeeSkill[]
+}
+
+// ==============================
+// スキルマッピング
+// ==============================
+model EmployeeSkill {
+  id         String @id @default(uuid())
+  employeeId String
+  processId  String
+  skillLevel Int    @default(1)
+
+  employee Employee @relation(fields: [employeeId], references: [id])
+  process  Process  @relation(fields: [processId], references: [id])
+
+  @@unique([employeeId, processId])
+}
+
+// ==============================
+// 型マスタ
+// ==============================
+model Mold {
+  id           String   @id @default(uuid())
+  moldNumber   String   @unique
+  machineType  String
+  setupMinutes Float
+  description  String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  workOrders WorkOrder[]
+}
+
+// ==============================
+// 作業指示（中心テーブル）
+// ==============================
+model WorkOrder {
+  id               String           @id @default(uuid())
+  orderItemId      String
+  processId        String
+  machineId        String?
+  employeeId       String?
+  moldId           String?
+  processingMethod ProcessingMethod @default(PRESS)
+  seq              Int
+  status           WorkOrderStatus  @default(PENDING)
+  scheduledStart   DateTime?
+  scheduledEnd     DateTime?
+  actualStart      DateTime?
+  actualEnd        DateTime?
+  setupMinutes     Float            @default(0)
+  processMinutes   Float            @default(0)
+  isNested         Boolean          @default(false)
+  nestingGroupId   String?
+  isMoldGrouped    Boolean          @default(false)
+  moldGroupId      String?
+  notes            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  orderItem OrderItem @relation(fields: [orderItemId], references: [id])
+  process   Process   @relation(fields: [processId], references: [id])
+  machine   Machine?  @relation(fields: [machineId], references: [id])
+  employee  Employee? @relation(fields: [employeeId], references: [id])
+  mold      Mold?     @relation(fields: [moldId], references: [id])
+}
+
+enum WorkOrderStatus {
+  PENDING
+  DRAFT
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+}
