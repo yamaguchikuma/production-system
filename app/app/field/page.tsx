@@ -104,6 +104,7 @@ export default function FieldPage() {
           </div>
           <select
             value={selectedEmployee}
+            data-testid="field-employee-select"
             onChange={e => setSelectedEmployee(e.target.value)}
             className="bg-blue-600 text-white border border-blue-400 rounded-lg px-3 py-2 text-sm"
           >
@@ -133,6 +134,9 @@ export default function FieldPage() {
           workOrders.map((wo, index) => (
             <div
               key={wo.id}
+              data-testid="field-workorder-card"
+              data-product-code={wo.OrderItem?.productCode ?? ''}
+              data-status={wo.status}
               className={`bg-white rounded-2xl shadow-sm overflow-hidden border-l-4 ${
                 wo.status === 'COMPLETED' ? 'border-green-400 opacity-70' :
                 wo.status === 'IN_PROGRESS' ? 'border-orange-400' :
@@ -205,6 +209,7 @@ export default function FieldPage() {
               <div className="px-4 pb-4 flex gap-3">
                 {wo.status === 'SCHEDULED' || wo.status === 'PENDING' ? (
                   <button
+                    data-testid="field-start-btn"
                     onClick={() => handleStart(wo.id)}
                     className="flex-1 py-4 bg-blue-600 text-white rounded-xl text-lg font-bold hover:bg-blue-700 active:scale-95 transition-transform"
                   >
@@ -212,13 +217,14 @@ export default function FieldPage() {
                   </button>
                 ) : wo.status === 'IN_PROGRESS' ? (
                   <button
+                    data-testid="field-complete-btn"
                     onClick={() => handleComplete(wo.id)}
                     className="flex-1 py-4 bg-green-600 text-white rounded-xl text-lg font-bold hover:bg-green-700 active:scale-95 transition-transform"
                   >
                     ✓ 完了した
                   </button>
                 ) : wo.status === 'COMPLETED' ? (
-                  <div className="flex-1 py-4 bg-gray-100 text-gray-400 rounded-xl text-lg font-bold text-center">
+                  <div data-testid="field-completed-label" className="flex-1 py-4 bg-gray-100 text-gray-400 rounded-xl text-lg font-bold text-center">
                     完了済み
                   </div>
                 ) : null}

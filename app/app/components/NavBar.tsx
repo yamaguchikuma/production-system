@@ -18,15 +18,15 @@ export default function NavBar() {
 
   return (
     <nav className="bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-1 sticky top-0 z-50 shadow-sm">
-      <span className="font-bold text-gray-800 text-sm mr-4 whitespace-nowrap">山口熊製作所</span>
-      <div className="flex gap-1">
+      <span className="font-bold text-gray-800 text-sm mr-4 whitespace-nowrap shrink-0">山口熊製作所</span>
+      <div className="flex gap-1 overflow-x-auto min-w-0">
         {navItems.map(item => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href) && item.href !== '/orders/new')
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0 whitespace-nowrap ${
                 isActive
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-600 hover:bg-gray-100'

@@ -165,8 +165,8 @@ export default function OrdersPage() {
         </div>
 
         {/* 絞り込み */}
-        <div className="bg-white rounded-xl shadow-sm px-4 py-3 flex gap-3 items-center">
-          <select value={filterCustomer} onChange={e => setFilterCustomer(e.target.value)}
+        <div className="bg-white rounded-xl shadow-sm px-4 py-3 flex flex-wrap gap-3 items-center">
+          <select value={filterCustomer} onChange={e => setFilterCustomer(e.target.value)} data-testid="orders-filter-customer"
             className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="">顧客（すべて）</option>
             {customerNames.map(n => <option key={n} value={n}>{n}</option>)}
@@ -207,7 +207,7 @@ export default function OrdersPage() {
               </thead>
               <tbody>
                 {filtered.map((row, i) => (
-                  <tr key={i} className={`border-b hover:bg-gray-50 ${checked.has(row.orderId) ? 'bg-blue-50' : ''}`}>
+                  <tr key={i} data-testid="orders-row" data-product-code={row.productCode ?? ''} className={`border-b hover:bg-gray-50 ${checked.has(row.orderId) ? 'bg-blue-50' : ''}`}>
                     <td className="px-3 py-2.5 text-center" onClick={e => e.stopPropagation()}>
                       <input type="checkbox" checked={checked.has(row.orderId)} onChange={() => toggleRow(row.orderId)}
                         className="w-4 h-4 cursor-pointer" />

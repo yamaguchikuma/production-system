@@ -94,8 +94,8 @@ export default function SchedulePage() {
           processId: d.processId,
           machineId: d.machineId || null,
           employeeId: d.employeeId,
-          scheduledStart: new Date(`${d.scheduledDate}T00:00`).toISOString(),
-          scheduledEnd: new Date(`${d.scheduledDate}T23:59`).toISOString(),
+          scheduledStart: new Date(`${d.scheduledDate}T00:00:00Z`).toISOString(),
+          scheduledEnd: new Date(`${d.scheduledDate}T23:59:59Z`).toISOString(),
           seq: i + 1,
         }),
       })
@@ -132,6 +132,8 @@ export default function SchedulePage() {
                   return (
                     <div
                       key={item.id}
+                      data-testid="schedule-item-row"
+                      data-product-code={item.productCode ?? ''}
                       onClick={() => !isDone && handleSelect(item)}
                       className={`px-4 py-3 cursor-pointer transition-colors ${
                         isDone ? 'bg-green-50 opacity-60 cursor-default' :
@@ -179,13 +181,14 @@ export default function SchedulePage() {
 
                 <div className="space-y-3">
                   {drafts.map((draft, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-3 space-y-2">
+                    <div key={index} data-testid={`schedule-draft-${index}`} className="border border-gray-200 rounded-lg p-3 space-y-2">
                       <div className="flex items-center gap-2">
                         <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">工程{index + 1}</span>
                         {draft.processName
                           ? <span className="font-medium text-gray-800 text-sm">{draft.processName}</span>
                           : <select
                               value={draft.processId}
+                              data-testid={`schedule-draft-process-${index}`}
                               onChange={e => {
                                 const p = processes.find(p => p.id === e.target.value)
                                 updateDraft(index, 'processId', e.target.value)
@@ -207,6 +210,7 @@ export default function SchedulePage() {
                           <label className="block text-xs text-gray-500 mb-1">担当者 *</label>
                           <select
                             value={draft.employeeId}
+                            data-testid={`schedule-draft-employee-${index}`}
                             onChange={e => updateDraft(index, 'employeeId', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
@@ -221,6 +225,7 @@ export default function SchedulePage() {
                           <input
                             type="date"
                             value={draft.scheduledDate}
+                            data-testid={`schedule-draft-date-${index}`}
                             onChange={e => updateDraft(index, 'scheduledDate', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
@@ -249,6 +254,7 @@ export default function SchedulePage() {
                 </div>
 
                 <button
+                  data-testid="schedule-add-process-btn"
                   onClick={() => setDrafts(prev => [...prev, { processId: '', processName: '', machineId: '', machineName: '', employeeId: '', scheduledDate: today }])}
                   className="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 text-sm hover:border-blue-400 hover:text-blue-500"
                 >
@@ -263,6 +269,7 @@ export default function SchedulePage() {
                     キャンセル
                   </button>
                   <button
+                    data-testid="schedule-submit-btn"
                     onClick={handleSubmit}
                     disabled={saving}
                     className="flex-1 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium disabled:opacity-50"

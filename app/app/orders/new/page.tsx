@@ -71,12 +71,12 @@ function MasterSearch({ parts, customers, onSelect, selectedPartId, onClear }: {
       {mode === 'customer' && (
         <div className="flex gap-2">
           <select value={filterCustomer} onChange={e => setFilterCustomer(e.target.value)}
-            className="flex-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
+            className="flex-1 min-w-0 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
             <option value="">顧客（すべて）</option>
             {customerNames.map(n => <option key={n} value={n}>{n}</option>)}
           </select>
           <select onChange={e => { const p = parts.find(x => x.id === e.target.value); if(p) onSelect(p) }}
-            className="flex-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
+            className="flex-1 min-w-0 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
             <option value="">品番を選択</option>
             {filtered.map(p => <option key={p.id} value={p.id}>{p.partCode} — {p.partName}</option>)}
           </select>
@@ -107,17 +107,17 @@ function MasterSearch({ parts, customers, onSelect, selectedPartId, onClear }: {
       {mode === 'stepwise' && (
         <div className="flex gap-2">
           <select value={stepCustomer} onChange={e => { setStepCustomer(e.target.value); setStepCode('') }}
-            className="flex-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
+            className="flex-1 min-w-0 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
             <option value="">顧客（すべて）</option>
             {customerNames.map(n => <option key={n} value={n}>{n}</option>)}
           </select>
           <select value={stepCode} onChange={e => setStepCode(e.target.value)}
-            className="flex-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
+            className="flex-1 min-w-0 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
             <option value="">品番（すべて）</option>
             {stepCodes.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
           <select onChange={e => { const p = parts.find(x => x.id === e.target.value); if(p) onSelect(p) }}
-            className="flex-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
+            className="flex-1 min-w-0 border border-gray-300 rounded-lg px-2 py-1.5 text-sm bg-white">
             <option value="">品名を選択</option>
             {filtered.map(p => <option key={p.id} value={p.id}>{p.partName}</option>)}
           </select>
@@ -197,7 +197,7 @@ export default function NewOrderPage() {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">顧客名 *</label>
-                <select required value={form.customerId} onChange={e => setForm({ ...form, customerId: e.target.value })}
+                <select required data-testid="order-customer-select" value={form.customerId} onChange={e => setForm({ ...form, customerId: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">選択してください</option>
                   {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -205,12 +205,12 @@ export default function NewOrderPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">納期 *</label>
-                <input type="date" required value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })}
+                <input type="date" required data-testid="order-duedate-input" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">備考</label>
-                <input type="text" value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })}
+                <input type="text" data-testid="order-notes-input" value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="特記事項" />
               </div>
@@ -240,7 +240,7 @@ export default function NewOrderPage() {
                 <div className="grid grid-cols-5 gap-3">
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">品番</label>
-                    <input type="text" value={item.productCode}
+                    <input type="text" data-testid={`item-productcode-${i}`} value={item.productCode}
                       onChange={e => updateItem(i, 'productCode', e.target.value)}
                       readOnly={!!item.partId}
                       className={`w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${item.partId ? 'bg-gray-50 text-gray-500' : ''}`}
@@ -248,7 +248,7 @@ export default function NewOrderPage() {
                   </div>
                   <div className="col-span-2">
                     <label className="block text-xs text-gray-500 mb-1">品名</label>
-                    <input type="text" value={item.partName}
+                    <input type="text" data-testid={`item-partname-${i}`} value={item.partName}
                       onChange={e => updateItem(i, 'partName', e.target.value)}
                       readOnly={!!item.partId}
                       className={`w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${item.partId ? 'bg-gray-50 text-gray-500' : ''}`}
@@ -256,7 +256,7 @@ export default function NewOrderPage() {
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">数量 *</label>
-                    <input type="number" required min={1} value={item.quantity}
+                    <input type="number" required min={1} data-testid={`item-quantity-${i}`} value={item.quantity}
                       onChange={e => updateItem(i, 'quantity', Number(e.target.value))}
                       className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                   </div>
