@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>材料注文書システム　最初に開くページ</title>
+  <style>
+    :root { color-scheme: light; font-family: "Yu Gothic UI", "Meiryo", sans-serif; }
+    body { margin: 0; background: #f4f7fb; color: #1f2937; line-height: 1.7; }
+    main { max-width: 900px; margin: 0 auto; padding: 32px 20px 56px; }
+    h1 { margin: 0 0 8px; color: #0f4c81; font-size: 30px; }
+    h2 { margin-top: 0; color: #123f63; font-size: 21px; }
+    .lead { margin: 0 0 24px; font-size: 18px; }
+    .notice { padding: 16px 18px; border-left: 6px solid #f59e0b; background: #fff7df; border-radius: 8px; }
+    .card { margin-top: 20px; padding: 22px; background: #fff; border: 1px solid #d8e1ea; border-radius: 12px; box-shadow: 0 3px 12px rgba(15, 76, 129, .06); }
+    .buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .button { display: block; padding: 15px 18px; border-radius: 9px; background: #1769aa; color: #fff; text-decoration: none; font-weight: 700; text-align: center; }
+    .button.secondary { background: #38761d; }
+    .button.gray { background: #5f6368; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #d8e1ea; padding: 12px 10px; text-align: left; vertical-align: top; }
+    th { background: #eaf3fb; }
+    code { background: #eef2f7; padding: 2px 5px; border-radius: 4px; }
+    .ok { color: #28720e; font-weight: 700; }
+    .ng { color: #b3261e; font-weight: 700; }
+    footer { margin-top: 28px; color: #5f6368; font-size: 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>材料注文書システム</h1>
+  <p class="lead">迷ったら、このページだけを開いてください。</p>
+
+  <div class="notice">
+    <strong>正式なデータはGoogleスプレッドシートです。</strong><br>
+    デスクトップのExcelはバックアップです。仕入先やメールアドレスの変更は、必ずGoogleスプレッドシートで行います。
+  </div>
+
+  <section class="card">
+    <h2>普段使うもの</h2>
+    <div class="buttons">
+      <a class="button" href="https://script.google.com/macros/s/AKfycbyIUuurXJdk4NgH9HfGCiBbWfDwaG4JG0hPTPuX9H5kluaamr2xLjaeIdWpKC9iCIc/exec">① 発注アプリを開く</a>
+      <a class="button secondary" href="https://docs.google.com/spreadsheets/d/1IgOlFzcvR7he9uCqhCyu1byngt2hDj8ubI9orqTsg_A/edit">② 本番マスタ・注文ログを開く</a>
+      <a class="button gray" href="https://drive.google.com/drive/folders/1c1kPJaHHO0uJRXHYYIUK06ENrNtmQ3xV">③ 保存されたPDFを確認する</a>
+      <a class="button gray" href="https://mail.google.com/mail/u/0/#drafts">④ Gmailの下書きを確認する</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>どんな時に何を使うか</h2>
+    <table>
+      <tr><th>やりたいこと</th><th>使う場所</th></tr>
+      <tr><td>材料を発注する</td><td>「① 発注アプリを開く」</td></tr>
+      <tr><td>仕入先名・送信先・CCを変更する</td><td>Googleスプレッドシートの「仕入先マスタ」</td></tr>
+      <tr><td>発注担当者を追加・変更する</td><td>Googleスプレッドシートの「発注担当者マスタ」</td></tr>
+      <tr><td>過去の発注を確認する</td><td>Googleスプレッドシートの「注文ログ」</td></tr>
+      <tr><td>作成された注文書PDFを見る</td><td>「③ 保存されたPDFを確認する」</td></tr>
+      <tr><td>送信前のメールを確認する</td><td>「④ Gmailの下書きを確認する」</td></tr>
+      <tr><td>システムのプログラムを変更する</td><td>通常は触らず、管理者がCode.gsなどを編集してGASへ反映</td></tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>デスクトップフォルダ内のファイル</h2>
+    <table>
+      <tr><th>ファイル</th><th>役割・使用する時</th></tr>
+      <tr><td><code>Code.gs</code></td><td>サーバー側プログラム。PDF作成、Gmail下書き、注文ログなどを変更する時に管理者が使用。</td></tr>
+      <tr><td><code>Index.html</code></td><td>発注アプリ画面の骨組み。画面項目を変更する時に使用。</td></tr>
+      <tr><td><code>script.html</code></td><td>発注画面の動作。入力方法やボタン動作を変更する時に使用。</td></tr>
+      <tr><td><code>style.html</code></td><td>発注画面の色、文字、配置を変更する時に使用。</td></tr>
+      <tr><td><code>appsscript.json</code></td><td>GASの権限・設定。通常は触らない。</td></tr>
+      <tr><td><code>README.md</code></td><td>開発者向けの詳しい仕様書。</td></tr>
+      <tr><td><code>アドレス＆ID.txt</code></td><td>各種IDの控え。日常作業では、この案内ページのリンクを使用。</td></tr>
+      <tr><td><code>材料注文書_マスタ_バックアップ.xlsx</code></td><td>非常用バックアップ。<span class="ng">日常のマスタ変更には使わない。</span></td></tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>間違えないための3つのルール</h2>
+    <ol>
+      <li><span class="ok">マスタ変更はGoogleスプレッドシートだけ</span>で行う。</li>
+      <li>発注後はGmail下書きを確認し、人が送信する。</li>
+      <li>コードを変更した時は、Apps Scriptへの反映と既存デプロイの更新が必要。</li>
+    </ol>
+  </section>
+
+  <footer>最終更新：2026年7月23日　／　このファイルは削除・改名せず、最初の入口として使用してください。</footer>
+</main>
+</body>
+</html>
